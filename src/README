@@ -1,0 +1,62 @@
+This project is intended to demonstrate capabilities of Java language and to show programming competence of the author
+
+The project is created in eclipse and hosted on GIT hub.
+
+The end state of the project is to read a "network" from a file this format may be XML or SQL. The configuration of the network shall include
+
+	1. Nodes
+	2. Sources/Sinks of traffic
+	3. Arc (connectors) each arc shall have a capacity of x vehicle per unit time as traffic volume increase the capacity per hour reduces 
+	4. Vehicle types
+	5. Traffic arrival rates
+	
+The intent is to model time every second and to place each vehicle at one second boundaries 
+
+It shall be possible to create adverse events - such as road-works, speed cameras, crashes that shall reduce the available capacity of an arc.
+
+The OOD of this project is following a MVC paradigm with the domain model, "view" and controller elements in separate packages. A package is created for JUnit test collateral 
+and test suites.
+
+There will be more than one view over time - initially network state will be written to a file - when the model is working well I will add capabilities to display on GUI.
+
+I am breaking the work into distinct phases the author has some experience of Java as a hobby and experience in OOA/OOD and design patterns. The intent of the project is to
+learn and demonstrate some base competence in areas of the Java environment required to build real applications. This is a part time task I expect it will take 12 months to 
+complete to my satisfaction. The phases here can be thought of as Epics from a Agile point of view. As I read around the subject I will amend the phases and the output of the 
+phases to include inclusion and demonstration of basic competence with other Java tools and add ons.
+
+
+Project Phases 
+
+	1. Create Infrastructure 
+	
+	Create project, connect to GIT hub, synchronize file - establish a hello world capability with a JUnit test suite establish model for paramterized JUnit tests
+	
+	2. Develop Domain object model 
+	
+	Develop the core program model including data structures, threading and simulation model. Need to develop traffic generator classes to provide random traffic arrival 
+	events on a poisson type PDF. Establish key attributes of vehicles, establish safe distance model for each based on breaking distances.
+	
+	The project shall generate JavaDoc documentation 
+	
+	<TODO> : can we do this as part of a build script?
+	<TODO> How to configure a javadoc command? 
+		https://docs.oracle.com/javase/9/javadoc/javadoc-command.htm 
+	
+	Use console / simple text file to insert events
+	
+	3. Read/write model from XML file
+	
+	All program to read/write the project to XML - this shall include nodes, arcs, sources, vehicles and vehicle attribute, arc status, etc. The XML shall be enough to 
+	build a road network and model a traffic pattern. Because of randomized nature of events it is possible that all runs will not give same results. I need to understand 
+	if Java random numbers will or wont give same values from a fixed seed.
+	
+	<TODO> : How do Java random numbers work?
+	
+	4. Read write from SQL
+	
+	Need to establish a SQL database online and then have project read write and perform queries to this data base. Explore graphing options to represent data graphically.
+	
+	5. 
+	
+	
+	
