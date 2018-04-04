@@ -1,10 +1,15 @@
 package com.jonathan.domainmodel;
 
 /**
- *  Road is one of the major elements in this model 
+ *  @author jonathan walsh
+ *  
+ *  Road is one of the major elements in this model a road allows traffic to flow from source to destination in the model traffic can only ingress the network at a source
+ *  and egress at the sink
  */
 
 import java.util.LinkedList;
+import com.jonathan.viewmodel.EventLogger;
+import com.jonathan.viewmodel.EventLogger.TraceLevel;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -17,9 +22,28 @@ import java.util.LinkedList;
 
 public class Road {
 	
-	public static final int minLaneCount = 1;
-	public static final int maxLaneCount = 3;
+	public static final char minLaneCount = 1;
+	public static final char maxLaneCount = 3;
 	
+	public enum LaneCount {
+		ONE_LANE,
+		TWO_LANE,
+		THREE_LANE
+	}
+	/**
+	 * The Enum RoadCondition.
+	 */
+	public enum RoadCondition {
+		
+		/** The normal. */
+		NORMAL,
+		
+		/** The bad. */
+		BAD,
+		
+		/** The dangerous. */
+		DANGEROUS
+	}
 	
 	/**
 	 * Instantiates a new road.
@@ -27,37 +51,84 @@ public class Road {
 	 *  @param - length is provided in meters
 	 *  @param - laneCount 
 	 */
-	public Road(Junction source, Junction destination, int laneCount, int length) {
+	public Road(Junction source, Junction destination, LaneCount laneCount, int length,String name) {
 		assert source != null;
 	    assert destination != null;
 	    assert length !=0; 
-	    assert laneCount >= minLaneCount && laneCount <= maxLaneCount;
 		this._con = new LinkedList<BaseVehicle>();
+		this._are = new LinkedList<AdverseRoadEvent>();
 		this._destination = destination;
 		this._source = source; 
 		this._laneCount = laneCount;
 		this._rc = RoadCondition.NORMAL;
 		this._length = length;
+		this._name=name;
 	}
 	
-	public Road(Junction source, int laneCount, int length) {
+	public Road(Junction source, LaneCount laneCount, int length,String name) {
 		assert source != null;
 	    assert length !=0; 
-	    assert laneCount >= minLaneCount && laneCount <= maxLaneCount;
 		this._con = new LinkedList<BaseVehicle>();
+		this._are = new LinkedList<AdverseRoadEvent>();
 		this._source = source; 
 		this._laneCount = laneCount;
 		this._rc = RoadCondition.NORMAL;
 		this._length = length;
+		this._name=name;
 	}
 	
-	public Road(int laneCount, int length) {
+	public Road(LaneCount laneCount, int length,String name) {
 	    assert length !=0; 
-	    assert laneCount >= minLaneCount && laneCount <= maxLaneCount;
 		this._con = new LinkedList<BaseVehicle>();
+		this._are = new LinkedList<AdverseRoadEvent>();
 		this._laneCount = laneCount;
 		this._rc = RoadCondition.NORMAL;
 		this._length = length;
+		this._name=name;
+	}
+	
+	public static char getMinlanecount() {
+		return minLaneCount;
+	}
+
+	public static char getMaxlanecount() {
+		return maxLaneCount;
+	}
+
+	public LinkedList<BaseVehicle> get_con() {
+		return _con;
+	}
+
+	public LinkedList<AdverseRoadEvent> get_are() {
+		return _are;
+	}
+
+	public Junction get_source() {
+		return _source;
+	}
+
+	public Junction get_destination() {
+		return _destination;
+	}
+
+	public LaneCount get_laneCount() {
+		return _laneCount;
+	}
+
+	public int get_length() {
+		return _length;
+	}
+
+	public String toString () {
+		return "Road: " + _name + " ";
+	}
+
+	public void attachAdverseRoadEvent(final AdverseRoadEvent re) {
+		if(re.get_end() < this.get_length()) {
+		 _are.add(re);
+		} else {
+			EventLogger.getInstance().logError(TraceLevel.MEDIUM,"Attempt to create traffic event beyond the end of road");
+		}
 	}
 	
 	public void setDestination(Junction j) {
@@ -92,32 +163,16 @@ public class Road {
 		return 0;
 	}
 	
-	
-	/**
-	 * The Enum RoadCondition.
-	 */
-	public enum RoadCondition {
-		
-		/** The normal. */
-		NORMAL,
-		
-		/** The bad. */
-		BAD,
-		
-		/** The dangerous. */
-		DANGEROUS
-	}
-
-	
 	/*
 	 *  Private variables
 	 */
 	
-	/** The con. */
-	LinkedList<BaseVehicle> _con;  // cars on road
-	Junction _source; 
-	Junction _destination;
-	int _laneCount;
-	RoadCondition _rc;
-	int _length;
-}
+	LinkedList<BaseVehicle>      _con;          // cars on road
+	LinkedList<AdverseRoadEvent> _are;          // open adverse roadevent 
+	Junction                     _source; 	    // cars move from src->dest 
+	Junction                     _destination;
+	LaneCount                    _laneCount;
+	RoadCondition                _rc;
+	int                          _length;       // meters
+	String                       _name;
+} 

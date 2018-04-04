@@ -1,7 +1,17 @@
+/**
+ *  @author Jonathan Walsh
+ *  
+ *  Class Junction
+ *  
+ *  This class models a junction where a TrafficRoute is terminated a Junction in this model must be associated with one TrafficRoute in which case it is a source/sink
+ *  of traffic.
+ *  
+ *  Ordinarily a Junction will be associated with two (2) or more TrafficRoute objects - the these must be unique.
+ *  
+ */
+
 package com.jonathan.domainmodel;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.ArrayList;
 
 /*
@@ -13,98 +23,55 @@ import java.util.ArrayList;
  */
 
 public class Junction {
-	private static final int maxNumberOfJunctionNodes=100; 
 	
-	private static HashSet<Junction> _allJunctions = new HashSet<Junction>(maxNumberOfJunctionNodes);
-	public static final int initalMaxRoadsPerJunction = 10;
+	public static final int initalMaxTrafficRoutesPerJunction = 10;
+	
+	public enum JunctionNumber {
+		JUNCTION_ONE,
+		JUNCTION_TWO
+	}
 	
 	public Junction(long id, final String name) {
 		this._jid = id;
-		if( !_allJunctions.add(this)) {
-			System.err.println("Error adding the junction to the hash of all junctions");
-			assert true; // die 
-		}
 		_name = name;
-		this._roads = new ArrayList<Road>(initalMaxRoadsPerJunction);
-	}
-	
-	/**
-	 * 
-	 * @param r - the road that you wish to associate with this junction 
-	 * @return - true the add worked otherwise false;
-	 */
-	public boolean addRoad(Road r) {
-		Iterator<Road> i = this._roads.iterator();
-		while(i.hasNext())
-			// don not add the same road twice a road can meet a junction once and only once 
-			if( i.next().equals(r)) {
-				System.err.println("The road already exists not adding a second time");
-				return false;
-			}
-		r.setDestination(this);
-		return this._roads.add(r);
+		this._trafficRoutes = new ArrayList<TrafficRoute>(initalMaxTrafficRoutesPerJunction);
 	}
 	
 	public String toString() {
-		return _name;
+		return "Junction: " + _name + " ";
 		
 	}
 	// Get methods
 	
+	/*
+	 * This function returns a read only copy of the traffic routes associated with a junction 
+	 */
+	public final TrafficRoute [] getTrafficRoutes() {
+		
+		if( _trafficRoutes.size() > 0 ) {
+			TrafficRoute[] tra = new TrafficRoute[_trafficRoutes.size()];
+			_trafficRoutes.toArray(tra);
+			return tra;
+		}
+		return null;
+	}
+	
 	public int numberOfRoads( ) {
-		return _roads.size();
+		return _trafficRoutes.size();
 	}
 	
 	public long get_jid() {
 		return _jid;
 	} 
+
 	
-	public static HashSet<Junction> allJunctionCollection() {
-		return _allJunctions;
-	}
-	
-	
-	public static boolean junctionExists(long key) {
-		Iterator<Junction> i = _allJunctions.iterator();
-		while(i.hasNext()) {
-			if (i.next().get_jid() == key) 
-				return true;
-		}
-		return false;
-	}
-	
-	public static Junction junctionExists(String name) {
-		Iterator<Junction> i = _allJunctions.iterator();
-		while(i.hasNext()) {
-			Junction cur = i.next();
-			if (cur.toString().equals(name)) 
-				return cur;
-		}
-		return null;
-	}
-	
-	public static int numberOfBadJunctions() {
-		Iterator<Junction> i = _allJunctions.iterator();
-		int bjc = 0;
-		while(i.hasNext()) {
-			if (i.next().numberOfRoads() == 0 ) {
-				bjc++;
-			}
-				
-		}
-		return bjc;
-	}
 	
 	/*
 	 *  Private variable 
 	 */
 	
 	private long _jid;
-	ArrayList<Road> _roads; 
+	ArrayList<TrafficRoute> _trafficRoutes; 
 	String _name;
-	
-	
-
-	
 
 }
