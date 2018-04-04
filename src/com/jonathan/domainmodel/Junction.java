@@ -18,12 +18,13 @@ public class Junction {
 	private static HashSet<Junction> _allJunctions = new HashSet<Junction>(maxNumberOfJunctionNodes);
 	public static final int initalMaxRoadsPerJunction = 10;
 	
-	public Junction(long id) {
+	public Junction(long id, final String name) {
 		this._jid = id;
 		if( !_allJunctions.add(this)) {
 			System.err.println("Error adding the junction to the hash of all junctions");
 			assert true; // die 
 		}
+		_name = name;
 		this._roads = new ArrayList<Road>(initalMaxRoadsPerJunction);
 	}
 	
@@ -42,6 +43,11 @@ public class Junction {
 			}
 		r.setDestination(this);
 		return this._roads.add(r);
+	}
+	
+	public String toString() {
+		return _name;
+		
 	}
 	// Get methods
 	
@@ -67,6 +73,16 @@ public class Junction {
 		return false;
 	}
 	
+	public static Junction junctionExists(String name) {
+		Iterator<Junction> i = _allJunctions.iterator();
+		while(i.hasNext()) {
+			Junction cur = i.next();
+			if (cur.toString().equals(name)) 
+				return cur;
+		}
+		return null;
+	}
+	
 	public static int numberOfBadJunctions() {
 		Iterator<Junction> i = _allJunctions.iterator();
 		int bjc = 0;
@@ -83,9 +99,9 @@ public class Junction {
 	 *  Private variable 
 	 */
 	
-	@SuppressWarnings("unused")
 	private long _jid;
 	ArrayList<Road> _roads; 
+	String _name;
 	
 	
 

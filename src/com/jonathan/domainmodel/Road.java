@@ -51,8 +51,21 @@ public class Road {
 		this._length = length;
 	}
 	
+	public Road(int laneCount, int length) {
+	    assert length !=0; 
+	    assert laneCount >= minLaneCount && laneCount <= maxLaneCount;
+		this._con = new LinkedList<BaseVehicle>();
+		this._laneCount = laneCount;
+		this._rc = RoadCondition.NORMAL;
+		this._length = length;
+	}
+	
 	public void setDestination(Junction j) {
 		_destination = j;
+	}
+	
+	public void setSource(Junction j) {
+		_source = j;
 	}
 	
 	public Junction otherJunction(Junction thisJunction) {
