@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<network>
+	<junction id="limerick 001"> </junction>
+	<junction id="dublin 001"> </junction>
+	<road id="N7">
+		<source>"limerick 002"</source>
+		<destination>"dublin 002"</destination>
+		<lanes>"2"</lanes>
+	</road> 
+</network>

@@ -181,10 +181,6 @@ public abstract class BaseVehicle {
 	public float getLpkm() {
 		return lphkm;
 	}
-
-
-
-	
 	
 	
 	/** The vt. */
