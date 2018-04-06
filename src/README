@@ -31,6 +31,11 @@ Project Phases
 	
 	Create project, connect to GIT hub, synchronize file - establish a hello world capability with a JUnit test suite establish model for paramterized JUnit tests
 	
+	Good progress on this so far. 
+	
+	1.1 - How to do a daily build an use a tool like Jenkins?
+	1.2 - How to do a JUnit test suite 
+	
 	2. Develop Domain object model 
 	
 	Develop the core program model including data structures, threading and simulation model. Need to develop traffic generator classes to provide random traffic arrival 
@@ -56,7 +61,17 @@ Project Phases
 	
 	Need to establish a SQL database online and then have project read write and perform queries to this data base. Explore graphing options to represent data graphically.
 	
-	5. 
+	5. Simulaton
+	
+	5.1 - need a notion of "real-time" in the simulation with clock ticks propagated to all domainHelper objects
+	5.2 - need to generate random traffic patterns based on poisson kind or PDF
+	
+	
+	6. Graphical represntaion 
+	
+	7. Grapical control
+	
+	8. Graphical editing 
 	
 	
 	
