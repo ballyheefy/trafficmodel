@@ -95,6 +95,25 @@ public class JunctionFactory {
 	}
 	
 	/*
+	 *  This method places the names of all junctions into a String[] 
+	 *  
+	 */
+	public String[] toStringArrayAllJunctions() {
+		
+		if (numberOfJunctions() == 0) return null;
+		String allJunctions[] = new String[numberOfJunctions()];
+		
+		Iterator<Junction> i = _allJunctions.iterator();
+		int j=0;
+		
+		while(i.hasNext()) 
+			allJunctions[j++ ]= i.next().toString();
+		
+		return allJunctions;
+		
+		
+	}
+	/*
 	 *  Utility for debug and diagnostics to count badly formed junctions 
 	 */
 	public static int numberOfBadJunctions() {

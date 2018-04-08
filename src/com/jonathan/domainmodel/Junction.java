@@ -33,12 +33,12 @@ public class Junction {
 	
 	public Junction(long id, final String name) {
 		this._jid = id;
-		_name = name;
-		this._trafficRoutes = new ArrayList<TrafficRoute>(initalMaxTrafficRoutesPerJunction);
+		_name = name.trim().toUpperCase();
+		this._trafficRoutes = new ArrayList<TrafficRoute>(initalMaxTrafficRoutesPerJunction);  
 	}
 	
 	public String toString() {
-		return "Junction: " + _name + " ";
+		return _name;
 		
 	}
 	// Get methods
@@ -71,6 +71,8 @@ public class Junction {
 	 */
 	
 	private long _jid;
+	
+	// This Collection allows a list of all TrafficRoutes associated with Junction to be maintained
 	ArrayList<TrafficRoute> _trafficRoutes; 
 	String _name;
 

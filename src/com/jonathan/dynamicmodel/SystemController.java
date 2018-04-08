@@ -1,7 +1,7 @@
 package com.jonathan.dynamicmodel;
 
-import com.jonathan.viewmodel.EventLogger;
-import com.jonathan.viewmodel.EventLogger.TraceLevel;
+import com.jonathan.helper.EventLogger;
+import com.jonathan.helper.EventLogger.TraceLevel;
 
 public class SystemController implements Runnable {
 
@@ -17,7 +17,7 @@ public class SystemController implements Runnable {
 		t.start();
 		
 		for(int i=0 ; i< 10 ; i++ ) {
-			EventLogger.getInstance().logError(TraceLevel.CRITIAL,"Running System Controller");
+			EventLogger.getInstance().logEvent(TraceLevel.MEDIUM,"Running System Controller");
 			synchronized(this) {
 				try {
 					this.wait(1000);
@@ -29,7 +29,7 @@ public class SystemController implements Runnable {
 				}
 			}
 		}
-		EventLogger.getInstance().close();
+		EventLogger.getInstance().closeEventLogger();
 	}
 
 }

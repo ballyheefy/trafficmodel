@@ -1,4 +1,4 @@
-package com.jonathan.viewmodel;
+package com.jonathan.helper;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,32 +38,32 @@ public class EventLogger {
 	}
 	
 	// TODO make this real
-	public boolean logError(TraceLevel tl,final String s) {
+	public boolean logEvent(TraceLevel tl,final String s) {
 		
 		if(s.length()>0) {
 			switch (tl) {
-			case CRITIAL:
-				_pw.println(new Timestamp(System.currentTimeMillis())+ " " + criticalMessage + s);
-				return true;
-			case HIGH:
-				if( _tl == TraceLevel.CRITIAL)
-					return false;
-				_pw.println(new Timestamp(System.currentTimeMillis())+ " "+ highMessage + s);
-				return true;
-			case MEDIUM:
-				if( _tl == TraceLevel.CRITIAL || _tl == TraceLevel.HIGH)
-					return false;
-				_pw.println(new Timestamp(System.currentTimeMillis())+ " "+ mediumMessage + s);
-				return true;
-			case LOW:
-				if( _tl == TraceLevel.CRITIAL || _tl == TraceLevel.HIGH || _tl == TraceLevel.MEDIUM)
-					return false;
-				_pw.println(new Timestamp(System.currentTimeMillis())+ " " + lowMessage + s);
-				return true;
-			default:
-				assert true; 
-				break;
-			}
+				case CRITIAL:
+					_pw.println(new Timestamp(System.currentTimeMillis())+ " " + criticalMessage + s);
+					return true;
+				case HIGH:
+					if( _tl == TraceLevel.CRITIAL)
+						return false;
+					_pw.println(new Timestamp(System.currentTimeMillis())+ " "+ highMessage + s);
+					return true;
+				case MEDIUM:
+					if( _tl == TraceLevel.CRITIAL || _tl == TraceLevel.HIGH)
+						return false;
+					_pw.println(new Timestamp(System.currentTimeMillis())+ " "+ mediumMessage + s);
+					return true;
+				case LOW:
+					if( _tl == TraceLevel.CRITIAL || _tl == TraceLevel.HIGH || _tl == TraceLevel.MEDIUM)
+						return false;
+					_pw.println(new Timestamp(System.currentTimeMillis())+ " " + lowMessage + s);
+					return true;
+				default:
+					assert true; 
+					break;
+				}
 		}	
 		return false;
 	}
@@ -72,7 +72,11 @@ public class EventLogger {
 		_tl = tl;
 	}
 	
-	public void close() {
+	public void flushEventLoggerOutput() {
+		_pw.flush();
+	}
+	
+	public void closeEventLogger() {
 		_pw.close();
 	}
 	
