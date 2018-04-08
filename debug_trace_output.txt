@@ -1,0 +1,5 @@
+2018-04-06 18:04:57.02 LOW : Building a Junction DUBLINJUNCTION
+2018-04-06 18:04:57.034 LOW : Building a Junction LIMERICKJUNCTION
+2018-04-06 18:04:57.034 LOW : buildTheJunctions exiting with [2] created
+2018-04-06 18:04:57.041 LOW : Junction [0] name [LIMERICKJUNCTION]
+2018-04-06 18:04:57.042 LOW : Junction [1] name [DUBLINJUNCTION]

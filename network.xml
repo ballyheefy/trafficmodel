@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- This is a comment -->
+
+<!--<network>-->
+<network>
+    <trafficroute id="N7">
+        <junction id="Limerick"/>
+        <junction id="Dublin"/>
+        <road>
+            <source>Dublin</source>
+            <dest>Limerick</dest>
+            <lanecount>1</lanecount>
+            <length>10000</length>
+        </road>
+        <road>
+            <source>Limerick</source>
+            <dest>Dublin</dest>
+            <lanecount>1</lanecount>
+            <length>10000</length>
+        </road>
+    </trafficroute>
+    <trafficroute id="N4">
+        <junction id="Galway"/>
+        <junction id="Dublin"/>
+        <road>
+            <source>Dublin</source>
+            <dest>Galway</dest>
+            <lanecount>1</lanecount>
+            <length>8000</length>
+        </road>
+        <road>
+            <source>Galway</source>
+            <dest>Dublin</dest>
+            <lanecount>1</lanecount>
+            <length>8000</length>
+        </road>
+    </trafficroute>
+    <trafficroute id="N8">
+        <junction id="Limerick"/>
+        <junction id="Cork"/>
+        <road>
+            <source>Limerick</source>
+            <dest>Cork</dest>
+            <lanecount>1</lanecount>
+            <length>6000</length>
+        </road>
+        <road>
+            <source>Cork</source>
+            <dest>Limerick</dest>
+            <lanecount>1</lanecount>
+            <length>6000</length>
+        </road>
+    </trafficroute>
+    <trafficroute id="N18">
+        <junction id="Cork"/>
+        <junction id="Dublin"/>
+        <road>
+            <source>Cork</source>
+            <dest>Dublin</dest>
+            <lanecount>1</lanecount>
+            <length>12000</length>
+        </road>
+        <road>
+            <source>Dublin</source>
+            <dest>Cork</dest>
+            <lanecount>1</lanecount>
+            <length>12000</length>
+        </road>
+    </trafficroute>
+    <trafficroute id="N2">
+        <junction id="Limerick"/>
+        <junction id="Galway"/>
+        <road>
+            <source>Limerick</source>
+            <dest>Galway</dest>
+            <lanecount>1</lanecount>
+            <length>5000</length>
+        </road>
+        <road>
+            <source>Galway</source>
+            <dest>Limerick</dest>
+            <lanecount>1</lanecount>
+            <length>5000</length>
+        </road>
+    </trafficroute>
+</network>

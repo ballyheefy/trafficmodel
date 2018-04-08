@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.0" vc:maxVersion="1.1">
+    
+    <element name="network">
+        <sequence>
+            <element name = "trafficroute">
+                <complexType>
+                    <sequence>
+                        <element name="junction" type="string"/>
+                        <element name="junction" type="string"/>
+                        <element name="Road"/>
+                        <sequence>
+                            <element name="source"     type="string" />
+                            <element name="dest"       type="string" />
+                            <element name="lanecount"  type="integer" minOccurs="1" />
+                            <element name="length"     type="integer"  minOccurs="1"/>
+                        </sequence>
+                    </sequence>
+                </complexType>
+            </element>
+        </sequence>
+    </element>
+</schema>
