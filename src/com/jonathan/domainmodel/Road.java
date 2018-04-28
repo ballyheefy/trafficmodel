@@ -2,6 +2,8 @@ package com.jonathan.domainmodel;
 
 
 
+import java.util.HashMap;
+
 /**
  *  @author jonathan walsh
  *  
@@ -10,10 +12,13 @@ package com.jonathan.domainmodel;
  */
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import com.jonathan.dynamicmodel.SystemTick;
 import com.jonathan.dynamicmodel.SystemTickHelper;
 import com.jonathan.dynamicmodel.SystemTickHelperRoad;
+import com.jonathan.helper.BadClassPassedException;
 import com.jonathan.helper.EventLogger;
 import com.jonathan.helper.EventLogger.TraceLevel;
 
@@ -28,39 +33,83 @@ import com.jonathan.helper.EventLogger.TraceLevel;
 
 public class Road implements SystemTick {
 	
-	public static final char minLaneCount = 1;
-	public static final char maxLaneCount = 3;
+	public static final int NO_VEHICLE_AHEAD=Integer.MAX_VALUE;
+	public static final int VEHICLE_START_LOCATION=0;   // vehicle always starts zero meters onto the road
 	
+	// this is a rich enumeration 
 	public enum LaneCount {
-		ONE_LANE,
-		TWO_LANE,
-		THREE_LANE;
+		
+		ONE_LANE(1),
+		TWO_LANE(2),
+		THREE_LANE(3),
+		BAD_LANE_COUNT;
+		
+		private static final char _minLaneCount = 1;
+		private static final char _maxLaneCount = 3; 
+		public static final char badLaneCount = 99;
+		
+		private static String _oneLane = "onelane";
+		private static String _twoLane = "twolane";
+		private static String _threeLane = "threelane";
+		
+		private static final Map<Integer, LaneCount> laneCountByValue = new HashMap<>();
+		
+		// populate the map with enum,int pairs
+		static {
+	        for (LaneCount type : LaneCount.values()) {
+	            laneCountByValue.put(type._value, type);
+	        }
+	    }
 
-		/*
 		private final int _value;
+
+	    private LaneCount(int value) {
+	        this._value = value;
+	    }
+
+	    private LaneCount() {
+	    	this._value = badLaneCount;
+	    }
+	    
+	    public static LaneCount forValue(int value) {
+	        return laneCountByValue.get(value);
+	        
+	    }
+	    
+	    public static char maxLaneCount () {
+	    	return _maxLaneCount; 
+	    }
+	    
+	    public static char minLaneCount() {
+	    	return _minLaneCount;
+	    }
 		
-		LaneCount(int value) {
-			this._value=value;
-		}
-		
-		int value () {
-			return _value;
-		}
-		*/
-		
+	    public static final String ONE_LANE() {
+	    	return _oneLane;
+	    }
+	    public static final String TWO_LANE() {
+	    	return _twoLane;
+	    }
+	    public static final String THREE_LANE() {
+	    	return _threeLane;
+	    }
+	    
+	    public static char LaneCountValue(final String str){
+	    	
+	    		return str.equals(_oneLane)?(char) 1:
+	    			                        (char) (str.equals(_twoLane)?(char)2: 
+	    			                        (char) ((str.equals(_threeLane)?(char)3:
+	    			                        (char) badLaneCount)));
+	    
+	    }
 	}
+	
 	/**
 	 * The Enum RoadCondition.
 	 */
 	public enum RoadCondition {
-		
-		/** The normal. */
 		NORMAL,
-		
-		/** The bad. */
 		BAD,
-		
-		/** The dangerous. */
 		DANGEROUS
 	}
 	
@@ -74,7 +123,7 @@ public class Road implements SystemTick {
 		assert source != null;
 	    assert destination != null;
 	    assert length !=0; 
-		this._con = new LinkedList<BaseVehicle>();
+		this._von = new LinkedList<BaseVehicle>();
 		this._are = new LinkedList<AdverseRoadEvent>();
 		this._destination = destination;
 		this._source = source; 
@@ -82,113 +131,146 @@ public class Road implements SystemTick {
 		this._rc = RoadCondition.NORMAL;
 		this._length = length;
 		this._name=name;
+		this._access= new Road.Access();
 	}
 	
 	public Road(Junction source, LaneCount laneCount, int length,String name) {
 		assert source != null;
 	    assert length !=0; 
-		this._con = new LinkedList<BaseVehicle>();
+		this._von = new LinkedList<BaseVehicle>();
 		this._are = new LinkedList<AdverseRoadEvent>();
 		this._source = source; 
 		this._laneCount = laneCount;
 		this._rc = RoadCondition.NORMAL;
 		this._length = length;
 		this._name=name;
+		this._access= new Road.Access();
 	}
 	
 	public Road(LaneCount laneCount, int length,String name) {
 	    assert length !=0; 
-		this._con = new LinkedList<BaseVehicle>();
+		this._von = new LinkedList<BaseVehicle>();
 		this._are = new LinkedList<AdverseRoadEvent>();
 		this._laneCount = laneCount;
 		this._rc = RoadCondition.NORMAL;
 		this._length = length;
 		this._name=name;
+		this._access= new Road.Access();
 	}
 	
 	public void SystemTickEvent() {
 		
-		new SystemTickHelperRoad().tickEvent(this);
-		
+		try { 
+			new SystemTickHelperRoad().tickEvent(this,SystemTickHelper.ONE_SECOND);
+		} catch (BadClassPassedException e) {
+			EventLogger.getInstance().logEvent(TraceLevel.CRITIAL, e.toString());
+		}
 	}
 	
-	public static char getMinlanecount() {
-		return minLaneCount;
-	}
+	public static class StaticAccess {
+		public static char getMinlanecount() {
+			return LaneCount.minLaneCount();
+		}
 
-	public static char getMaxlanecount() {
-		return maxLaneCount;
+		public static char getMaxlanecount() {
+			return LaneCount.maxLaneCount();
+		}
 	}
+	
+	/*
+	 *  Place all trivial access methods in a wrapper class to help read the code
+	 */
+	public class Access {
+		public List<BaseVehicle> get_con() {
+			return _von;
+		}
+		public void addVehicleToRoad(BaseVehicle v) {
+			synchronized (_von) {
+				_von.add(v);
+			}
+		}
+		public void removeVehicleFromRoad(BaseVehicle v) {
+			synchronized (_von) {
+				_von.remove(v);
+			}
+		}
+		public boolean isEmpty() {
+			return _von.size() == 0;
+		}
+		public List<AdverseRoadEvent> get_are() {
+			return _are;
+		}
+		public Junction get_source() {
+			return _source;
+		}
+		public Junction get_destination() {
+			return _destination;
+		}
+		public LaneCount get_laneCount() {
+			return _laneCount;
+		}
+		public int get_length() {
+			return _length;
+		}
+		public String toString () {
+			return "Road: " + _name + " ";
+		}
+		public void setDestination(Junction j) {
+			_destination = j;
+		}
+		public void setSource(Junction j) {
+			_source = j;
+		}
+		public void setRoadCondition(RoadCondition c) {
+			_rc = c;
+		}
+		public RoadCondition getRoadCondition() {
+			return _rc;
+		}
 
-	public LinkedList<BaseVehicle> get_con() {
-		return _con;
 	}
-
-	public LinkedList<AdverseRoadEvent> get_are() {
-		return _are;
+	
+	public int distanceToNextvehicle(int idx) {
+		if(idx != _von.size()-1) {
+			return _von.get(idx+1).getLocation()-_von.get(idx).getLocation();
+		} else {
+			return NO_VEHICLE_AHEAD;
+		}
 	}
-
-	public Junction get_source() {
-		return _source;
+	
+	public int distanceToEnd(int idx) {
+		if(idx != _von.size()-1) {
+			return _von.get(idx+1).getLocation()-this._length;
+		} else {
+			return NO_VEHICLE_AHEAD;
+		}
 	}
-
-	public Junction get_destination() {
-		return _destination;
-	}
-
-	public LaneCount get_laneCount() {
-		return _laneCount;
-	}
-
-	public int get_length() {
-		return _length;
-	}
-
-	public String toString () {
-		return "Road: " + _name + " ";
-	}
-
 	public void attachAdverseRoadEvent(final AdverseRoadEvent re) {
-		if(re.get_end() < this.get_length()) {
-		 _are.add(re);
+		if(re.get_end() < this.access().get_length()) {
+			synchronized (this._are) {
+				try { 
+					_are.add(re);
+				} catch (NullPointerException e) {
+					EventLogger.getInstance().logEvent(TraceLevel.CRITIAL,e.toString());
+				} catch (UnsupportedOperationException e) {
+					EventLogger.getInstance().logEvent(TraceLevel.CRITIAL,e.toString());
+				} catch (ClassCastException e) {
+					EventLogger.getInstance().logEvent(TraceLevel.CRITIAL,e.toString());
+				} catch (IllegalArgumentException e) {
+					EventLogger.getInstance().logEvent(TraceLevel.CRITIAL,e.toString());
+				} catch (Exception e) {
+					EventLogger.getInstance().logEvent(TraceLevel.CRITIAL,e.toString());
+				}
+			}
 		} else {
 			EventLogger.getInstance().logEvent(TraceLevel.MEDIUM,"Attempt to create traffic event beyond the end of road");
 		}
 	}
 	
-	public void setDestination(Junction j) {
-		_destination = j;
-	}
-	
-	public void setSource(Junction j) {
-		_source = j;
-	}
 	
 	public Junction otherJunction(Junction thisJunction) {
 		return this._source.equals(thisJunction) ? this._destination : this._source;
 	}
-	
-	public void setRoadCondition(RoadCondition c) {
-		this._rc = c;
-	}
-	
-	public RoadCondition getRoadCondition() {
-		return this._rc;
-	}
-	
-	/*
-	private static final Map<Integer, LaneCount> intToTypeMap = new HashMap<Integer, LaneCount>();
-	static {
-	    for (LaneCount type : LaneCount.values()) {
-	        intToTypeMap.put(type.value(), type);
-	    }
-	}
-	
-	public static LaneCount fromInt(int i) {
-	    LaneCount type = LaneCount.value(Integer.valueOf(i));
-	    return type;
-	}
-	*/
 	
 	/**
 	 * 
@@ -197,20 +279,31 @@ public class Road implements SystemTick {
 	 * 
 	 *  TODO: Think about how to to OSPF route - not sure this approach is good yet
 	 */
-	public int leadsTo(Junction j) {
-		return 0;
+	
+	@Deprecated
+	public boolean leadsTo(Junction j) {
+		return true;
+	}
+	
+	public boolean isEmpty() {
+		return access().isEmpty();
+	}
+	
+	public Road.Access access() {
+		return _access;
 	}
 	
 	/*
 	 *  Private variables
 	 */
 	
-	LinkedList<BaseVehicle>      _con;          // cars on road
-	LinkedList<AdverseRoadEvent> _are;          // open adverse roadevent 
+	List<BaseVehicle>      		 _von;          // vehicles on road
+	List<AdverseRoadEvent>		 _are;          // open adverse roadevent 
 	Junction                     _source; 	    // cars move from src->dest 
 	Junction                     _destination;
 	LaneCount                    _laneCount;
 	RoadCondition                _rc;
 	int                          _length;       // meters
 	String                       _name;
+	Road.Access					 _access;					
 } 

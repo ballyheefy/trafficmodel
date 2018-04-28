@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
 import com.jonathan.domainmodel.VehicleFactory;
+import com.jonathan.helper.CarBuilder;
+import com.jonathan.helper.CodeNeverHereException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,23 +42,20 @@ class FactoryBuilderTest {
 	 * Test 1.
 	 */
 	@Test
-	void test1() {
-		VehicleFactory factory = VehicleFactory.getInstance(); 
-		assert factory != null;
-	}
-	
-	/**
-	 * Test 2.
-	 */
-	@Test 
-	void Test2() {
-	
-		BaseVehicle thisCar = VehicleFactory.getInstance().buildVehicle(VehicleType.CAR, 150, "141 CE 76", 1685, 4.9f);
-		System.out.println("safe breaking distance at 100 : " + thisCar.safeBreakingDistance(100));
-		System.out.println("safe breaking distance at 100 : " + thisCar.safeBreakingDistance(100,RoadCondition.NORMAL));
-		System.out.println("safe breaking distance at 100 : " + thisCar.safeBreakingDistance(100,RoadCondition.BAD));
-		System.out.println("safe breaking distance at 100 : " + thisCar.safeBreakingDistance(100,RoadCondition.DANGEROUS));
+	void Test1() {
+
 		
+		Car thisCar;
+		try {
+			thisCar = CarBuilder.getInstance().withMaxSpeed(150).withLPHKM(4.9f).withVehicleType(VehicleType.CAR).withWeight(1685).withRegistration("141 CE 76").build();
+			for(int i = 10 ; i < 120; i++ ) {
+				
+					System.out.println("safe breaking distance at " + i + " : " + thisCar.safeBreakingDistance(i,RoadCondition.NORMAL));
+			}
+		} catch (CodeNeverHereException e) {
+			e.printStackTrace();
+		}
 	}
+	
 
 }

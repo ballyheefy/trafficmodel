@@ -67,16 +67,16 @@ public class TrafficRoute {
 	public Junction[] getJunction() {
 		
 		Junction j1[] = new Junction[roadCount];
-		j1[firstRoad] = _roads[firstRoad].get_source();
-		j1[secondRoad] = _roads[secondRoad].get_source();
+		j1[firstRoad] = _roads[firstRoad].access().get_source();
+		j1[secondRoad] = _roads[secondRoad].access().get_source();
 		return j1;
 		
 	}
 	
 	public String toString() {
 		// TODO : also return names of Junctions and format text 
-		return "TR :" + _routeName + " " + _roads[firstRoad].toString() + _roads[firstRoad].get_source().toString() + 
-				_roads[secondRoad].toString() + _roads[secondRoad].get_source().toString();
+		return "TR :" + _routeName + " " + _roads[firstRoad].toString() + _roads[firstRoad].access().get_source().toString() + 
+				_roads[secondRoad].toString() + _roads[secondRoad].access().get_source().toString();
 	}
 	
 	public String getName() {

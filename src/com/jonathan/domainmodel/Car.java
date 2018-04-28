@@ -1,5 +1,8 @@
 package com.jonathan.domainmodel;
 
+import com.jonathan.helper.CarBuilder;
+import com.jonathan.helper.CodeNeverHereException;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Car.
@@ -25,6 +28,13 @@ public class Car extends BaseVehicle  {
 		super(vt, maxSpeedKPH, reg, weight, lphkm);
 		
 	}
+	
+	public Car(CarBuilder cb) throws CodeNeverHereException {
+		super(cb);
+		// take the data from the CarBuilder object and assign to the car
+		super._vt = cb.getVehicleType();
+	}
+
 	
 	
 

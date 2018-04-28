@@ -65,6 +65,7 @@ public class EventLogger {
 					break;
 				}
 		}	
+		flushEventLoggerOutput();
 		return false;
 	}
 	
